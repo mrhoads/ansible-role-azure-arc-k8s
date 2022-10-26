@@ -1,0 +1,5 @@
+---
+# tasks file for mrhoads.azure-arc-k8s
+
+- name: Get kubeconfig
+  include_tasks: get-kubectl.yml

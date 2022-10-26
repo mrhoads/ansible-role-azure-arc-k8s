@@ -1,0 +1,24 @@
+---
+# get-kubectl.yml
+
+- name: Create local temp directory
+  local_action:
+    module: ansible.builtin.tempfile
+    state: directory
+    suffix: temp
+  register: local_temp_path
+
+- name: Get kubeconfig
+  ansible.builtin.fetch:
+    src: /home/mrhoads/.kube/config
+    dest: '{{ local_temp_path.path }}'
+
+- name: Debug temp path
+  local_action:
+    module: debug
+    msg: '{{ local_temp_path.path }}'
+
+- name: Run Connected Cluster
+  local_action:
+    module: command
+    cmd: az connectedk8s connect --name '{{ inventory_hostname }}' --resource-group '{{ azure_arc.resource_group }}' --location '{{ azure_arc.location }}' --kube-config '{{ local_temp_path.path }}/{{ inventory_hostname }}/home/mrhoads/.kube/config'

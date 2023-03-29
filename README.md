@@ -1,42 +1,42 @@
 Role Name
 =========
 
-Onboard Kubernetes cluster to Azure Arc
+This role onboard Kubernetes cluster to Azure Arc
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role begins with a suitable Kubernetes cluster already created.  In addition, it uses the Azure CLI of the workstation running Ansible to run the *az connectedk8s connect* command to onboard the cluster.  The Azure CLI must be authenticated and the user must have suitable permission for onboarding the cluster.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+This role requires variables to be defined for the following:
+
+- azure_arc.resource_group <-- the Azure resource group that the cluster is to be onboarded to
+- azure_arc.location <-- the Azure region where the cluster is to be onboarded
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+This role has no Galaxy dependencies but can, as illustrated below, be used after the Kubernetes cluster is provisioned, like what can be done with *istvano.microk8s*
 
 Example Playbook
 ----------------
 
 ```
-
----
 - hosts: arck8s
   roles:
-    - role: /Users/mrhoads/development/5amworkshop-azure/arc-demo-environment/mrhoads.azure-arc-k8s
-```
-
-
-Inventory:
-```
-
----
-arck8s:
-  hosts:
-    dev-arc-microk8s03.internal.5amworkshop.com:
+    - role: istvano.microk8s
+      vars:
+        users: ['jonedoe']
+        microk8s_dns_resolvers: 1.2.3.4
+        microk8s_plugins:
+          dns: "1.2.3.4"
+          rbac: true
+          storage: true
+          helm3: true
+    - role: /path/to/role/roles/mrhoads.azure-arc-k8s
 
 ```
 
@@ -48,4 +48,6 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Mike Rhoads
+
+

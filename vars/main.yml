@@ -1,2 +1,6 @@
 ---
 # vars file for mrhoads.azure-arc-k8s
+
+azure_arc:
+  resource_group: demo-arc-rg
+  location: eastus
